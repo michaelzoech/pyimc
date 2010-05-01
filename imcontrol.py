@@ -4,7 +4,7 @@ import sys
 import subprocess
 import dbus
 
-class SkypeWrapper:
+class SkypeWrapper(object):
 	def __init__(self, bus):
 		try:
 			self.proxy = bus.get_object('com.Skype.API', '/com/Skype')
@@ -48,7 +48,7 @@ class SkypeWrapper:
 	def is_online(self, friend):
 		return self.proxy.Invoke('GET USER %s ONLINESTATUS' % friend).split()[3] != 'OFFLINE'
 
-class PidginWrapper:
+class PidginWrapper(object):
 	def __init__(self, bus):
 		try:
 			obj = bus.get_object('im.pidgin.purple.PurpleService',
