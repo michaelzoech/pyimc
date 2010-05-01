@@ -3,6 +3,8 @@
 import sys
 import subprocess
 import dbus
+import os
+import ConfigParser
 
 class SkypeWrapper(object):
 	def __init__(self, bus):
@@ -82,7 +84,80 @@ class PidginWrapper(object):
 	def is_online(self, friend):
 		return self.proxy.PurpleBuddyIsOnline(friend)
 
+class Config(object):
+	"""	
+	A object to wrap a dictionary for easier configuration access.
+	
+	Based on Storage in web.py (public domain)
+	"""	
+	def __init__(self):
+		self._config = {
+			# general options
+			'skype': '1',
+			'pidgin': '1',
+			# horicontal options
+			'incase': '1',
+			'xmms': '1',
+			'bottom': '0',
+			'x': '680',
+			'y': '200',
+			'w': '240',
+			'fn': '\"-*-verdana-medium-r-*-*-16-*-*-*-*-*-iso10646-1\"',
+			'nb': '#000000',
+			'nf': '#9999CC',
+			'sb': '#000066',
+			'sf': '#FFFFFF',
+			# vertically options
+			'resize': '1'}
+		config_file = os.path.expanduser('~/.controlimrc')
+		if os.path.lexists(config_file):
+			try:
+				parser = ConfigParser.SafeConfigParser()
+				f = open(config_file)
+				parser.readfp(f)
+				config.get_dict().update(dict(parser.items('DEFAULT', raw=True)))
+			except (IOError, ConfigParser.ParsingError), e:
+				print >> sys.stderr, "Configuration file can not be read %s\n%s" % (config_file, e)
+				sys.exit(1)
+
+	def get_config(self):
+		''' Get the contained configuration.'''
+		return self._config
+	
+	def __getattr__(self, key):
+		try:
+			return self._config[key]
+		except KeyError, k:
+			raise AttributeError, k 
+		
+	def __setattr__(self, key, value):
+		if key == '_config':
+			object.__setattr__(self, key, value)
+		else:
+			self._config[key] = value
+			
+	def __delattr__(self, key):
+		try:
+			del self._config[key]
+		except KeyError, k:
+			raise AttributeError, k 
+
+	# For container methods pass-through to the underlying config.
+	def __getitem__(self, key):
+		return self._config[key] 
+	
+	def __setitem__(self, key, value):
+		self._config[key] = value 
+		
+	def __delitem__(self, key):
+		del self._config[key] 
+		
+	def __repr__(self):
+		return '<Storage ' + repr(self._config) + '>'
+
 def main():
+	config = Config()
+	
 	bus = dbus.SessionBus()
 	pidgin = PidginWrapper(bus)
 	skype = SkypeWrapper(bus)
