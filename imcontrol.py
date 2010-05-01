@@ -96,7 +96,9 @@ def main():
 
 	for proto, friends in coll.iteritems():
 		for friend in friends:
-			p.stdin.write('%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto))
+			out = '%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto)
+			outencoded = out.encode("ascii", "replace")
+			p.stdin.write(outencoded)
 
 	wanted = p.communicate()[0]
 	if wanted == "":
