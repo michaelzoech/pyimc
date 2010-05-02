@@ -108,7 +108,10 @@ class Config(object):
 			'sb': '#000066',
 			'sf': '#FFFFFF',
 			# vertically options
-			'resize': '1'}
+			'resize': '1',
+			'height': '-1',
+			'list': '10',
+			'indicator': '1'}
 		config_file = os.path.expanduser('~/.controlimrc')
 		if os.path.lexists(config_file):
 			try:
@@ -158,22 +161,32 @@ class Config(object):
 def buildDmenuCmd(config):
 	params = [] 
 	params.append("dmenu")
-	params.append("-i")
+	if config.incase: params.append("-i")
 	params.append("-l")
-	params.append("10")
+	params.append(config.list)
 	params.append("-h")
-	params.append("-1")
-	params.append("-rs")
-	params.append("-ni")
-	params.append("-xs")
+	params.append(config.height)
+	if config.resize: params.append("-rs")
+	if config.indicator: params.append("-ni")
+	if config.xmms: params.append("-xs")
+	if config.bottom: params.append("-b")
 	params.append("-x")
-	params.append("680")
+	params.append(config.x)
 	params.append("-y")
-	params.append("200")
+	params.append(config.y)
 	params.append("-w")
-	params.append("240")
+	params.append(config.w)
 	params.append("-fn")
-	params.append("\"-*-verdana-medium-r-*-*-16-*-*-*-*-*-iso10646-1\"")
+	params.append(config.fn)
+	params.append("-nb")
+	params.append(config.nb)
+	params.append("-nf")
+	params.append(config.nf)
+	params.append("-sb")
+	params.append(config.sb)
+	params.append("-sf")
+	params.append(config.sf)
+	print params
 	return params
 
 def main():
