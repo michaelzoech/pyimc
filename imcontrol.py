@@ -93,12 +93,12 @@ class Config(object):
 	def __init__(self):
 		self._config = {
 			# general options
-			'skype': '1',
-			'pidgin': '1',
+			'skype': 1,
+			'pidgin': 1,
 			# horicontal options
-			'incase': '1',
-			'xmms': '1',
-			'bottom': '0',
+			'incase': 1,
+			'xmms': 1,
+			'bottom': 0,
 			'x': '680',
 			'y': '200',
 			'w': '240',
@@ -108,10 +108,10 @@ class Config(object):
 			'sb': '#000066',
 			'sf': '#FFFFFF',
 			# vertically options
-			'resize': '1',
+			'resize': 1,
 			'height': '-1',
 			'list': '10',
-			'indicator': '1'}
+			'indicator': 1
 		config_file = os.path.expanduser('~/.controlimrc')
 		if os.path.lexists(config_file):
 			try:
