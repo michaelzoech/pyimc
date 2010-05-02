@@ -79,7 +79,7 @@ class PidginWrapper(object):
 	def open_chat(self, proto, name):
 		_name = self.proxy.PurpleBuddyGetName(self.friends[proto][name])
 		conv = self.proxy.PurpleConversationNew(1, self.accounts[proto], _name)
-		self.proxy.PurpleConverstationPresent(conv)
+		self.proxy.PurpleConversationPresent(conv)
 
 	def is_online(self, friend):
 		return self.proxy.PurpleBuddyIsOnline(friend)
@@ -196,19 +196,22 @@ def buildDmenuCmd(config):
 	params.append(config.sb)
 	params.append("-sf")
 	params.append(config.sf)
-	print params
 	return params
 
 def main():
 	config = Config()
 	
 	bus = dbus.SessionBus()
-	pidgin = PidginWrapper(bus)
-	skype = SkypeWrapper(bus)
+	coll = {}
 
-	coll = skype.lookup_friends()
-	coll.update(pidgin.lookup_friends())
+	if config.pidgin == 'True':
+		pidgin = PidginWrapper(bus)
+		coll.update(pidgin.lookup_friends())
 
+	if config.skype == 'True':	
+		skype = SkypeWrapper(bus)
+		coll.update(skype.lookup_friends())
+	
 	dmenu = buildDmenuCmd(config)
 	p = subprocess.Popen(dmenu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
@@ -225,7 +228,7 @@ def main():
 	proto = wanted.split()[-1].lower()
 	name = wanted[:wanted.rfind(' on ')]
 
-	if proto == 'skype':
+	if proto == 'skype' and config.skype == 'True':
 		skype.open_chat(name)
 	else:
 		pidgin.open_chat(proto, name)
