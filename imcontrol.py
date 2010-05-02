@@ -93,32 +93,37 @@ class Config(object):
 	def __init__(self):
 		self._config = {
 			# general options
-			'skype': 1,
-			'pidgin': 1,
+			'skype': 'True',
+			'pidgin': 'True',
 			# horicontal options
-			'incase': 1,
-			'xmms': 1,
-			'bottom': 0,
+			'incase': 'True',
+			'xmms': 'True',
+			'bottom': 'False',
+			'defx': 'True',
 			'x': '680',
+			'defy': 'True',
 			'y': '200',
+			'defw': 'True',
 			'w': '240',
+			'deffn': 'True',
 			'fn': '\"-*-verdana-medium-r-*-*-16-*-*-*-*-*-iso10646-1\"',
 			'nb': '#000000',
 			'nf': '#9999CC',
 			'sb': '#000066',
 			'sf': '#FFFFFF',
 			# vertically options
-			'resize': 1,
+			'resize': 'True',
+			'vertical': 'True',
 			'height': '-1',
 			'list': '10',
-			'indicator': 1
-		config_file = os.path.expanduser('~/.controlimrc')
+			'indicator': 'True'}
+		config_file = os.path.expanduser('~/.imcrc')
 		if os.path.lexists(config_file):
 			try:
 				parser = ConfigParser.SafeConfigParser()
 				f = open(config_file)
 				parser.readfp(f)
-				config.get_dict().update(dict(parser.items('DEFAULT', raw=True)))
+				self._config.update(dict(parser.items('DEFAULT', raw=True)))
 			except (IOError, ConfigParser.ParsingError), e:
 				print >> sys.stderr, "Configuration file can not be read %s\n%s" % (config_file, e)
 				sys.exit(1)
@@ -161,23 +166,28 @@ class Config(object):
 def buildDmenuCmd(config):
 	params = [] 
 	params.append("dmenu")
-	if config.incase: params.append("-i")
-	params.append("-l")
-	params.append(config.list)
-	params.append("-h")
-	params.append(config.height)
-	if config.resize: params.append("-rs")
-	if config.indicator: params.append("-ni")
-	if config.xmms: params.append("-xs")
-	if config.bottom: params.append("-b")
-	params.append("-x")
-	params.append(config.x)
-	params.append("-y")
-	params.append(config.y)
-	params.append("-w")
-	params.append(config.w)
-	params.append("-fn")
-	params.append(config.fn)
+	if config.incase == 'True': params.append("-i")
+	if config.vertical == 'True':
+		params.append("-l")
+		params.append(config.list)
+		params.append("-h")
+		params.append(config.height)
+	if config.resize == 'True': params.append("-rs")
+	if config.indicator == 'True': params.append("-ni")
+	if config.xmms == 'True': params.append("-xs")
+	if config.bottom == 'True': params.append("-b")
+	if config.defx == 'True':
+		params.append("-x")
+		params.append(config.x)
+	if config.defy == 'True':
+		params.append("-y")
+		params.append(config.y)
+	if config.defw == 'True':
+		params.append("-w")
+		params.append(config.w)
+	if config.deffn == 'True':
+		params.append("-fn")
+		params.append(config.fn)
 	params.append("-nb")
 	params.append(config.nb)
 	params.append("-nf")

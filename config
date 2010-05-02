@@ -1,12 +1,3 @@
-===CONFIG===
-
-TBW
-
-===USAGE===
-Optionally create a configuartion file in ~/.imcrc
-
-This file can contain the following content:
-
 [DEFAULT]
 skype = True
 pidgin = True
@@ -30,16 +21,4 @@ vertical = False
 height = -1
 list = 10
 indicator = True
-
-for simplicity, a default config is available in the downloaded source. Simply copy config to ~/.imcrc and adapt what is required for you.
-
-TBW
-
-===DEVELOPMENT===
-
-TBW
-
-===BUILD===
-
-TBW
 
