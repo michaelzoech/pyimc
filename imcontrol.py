@@ -155,6 +155,27 @@ class Config(object):
 	def __repr__(self):
 		return '<Storage ' + repr(self._config) + '>'
 
+def buildDmenuCmd(config):
+	params = [] 
+	params.append("dmenu")
+	params.append("-i")
+	params.append("-l")
+	params.append("10")
+	params.append("-h")
+	params.append("-1")
+	params.append("-rs")
+	params.append("-ni")
+	params.append("-xs")
+	params.append("-x")
+	params.append("680")
+	params.append("-y")
+	params.append("200")
+	params.append("-w")
+	params.append("240")
+	params.append("-fn")
+	params.append("\"-*-verdana-medium-r-*-*-16-*-*-*-*-*-iso10646-1\"")
+	return params
+
 def main():
 	config = Config()
 	
@@ -165,8 +186,7 @@ def main():
 	coll = skype.lookup_friends()
 	coll.update(pidgin.lookup_friends())
 
-	dmenu = ["dmenu","-i","-l","10","-rs","-ni","-xs","-x","680","-y","200","-w","240"
-	        ,"-fn", "\"-*-verdana-medium-r-*-*-16-*-*-*-*-*-iso10646-1\""]
+	dmenu = buildDmenuCmd(config)
 	p = subprocess.Popen(dmenu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
 	for proto, friends in coll.iteritems():
