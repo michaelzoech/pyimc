@@ -1,5 +1,5 @@
 include CHANGELOG
 include README
 include LICENSE
-include config
+recursive-include contrib *
 
