@@ -1,4 +1,5 @@
 build
 dist
 pyimc.egg-info
+*.pyc
 
