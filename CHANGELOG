@@ -1,3 +1,16 @@
+===pyimc-0.2.0 2001005XX==
+TBW
+
+Bugs Fixed
+ *
+
+Features
+ *
+
+Enhancements / Tasks
+ * provided archlinux pkgbuild
+ * move example scripts to contrib folder
+
 ===pyimc-0.1.0 20100503==
 First release of the pyimc instant messanger command line control tool.
 
