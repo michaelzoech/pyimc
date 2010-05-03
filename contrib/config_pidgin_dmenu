@@ -1,5 +1,10 @@
+# configuration file; move to ~/.pyimcrc
+# this configuration file configures pyimc to access only pidgin 
+# and provide the contacts in a dmenu at the bottom of the screen
+
+
 [DEFAULT]
-skype = True
+skype = False
 pidgin = True
 incase = True
 xmms = True
