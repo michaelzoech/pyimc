@@ -58,7 +58,7 @@ setup(name='pyimc',
       version = '0.1.0',
       description = 'Provide command line control over a wide range of different instant messanger, such as skype or pidgin.',
       maintainer = 'Michael Zoech, Andreas Pieber',
-      maintainer_email = 'anpieber at gmail dot com, maik at 0x2a dot at',
+      maintainer_email = 'anpieber at gmail, michi.zoech+arch at gmail',
       url = 'http://github.com/crazymaik/pyimc',
       classifiers = [f.strip() for f in """
         Development Status :: 5 - Production/Stable

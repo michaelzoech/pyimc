@@ -1,5 +1,5 @@
 # Contributor: Michael Zoech <michi.zoech+arch at gmail>
-# Contributor: Andreas Pieber <>
+# Contributor: Andreas Pieber <anpieber at gmail>
 pkgname=pyimc
 pkgver=0.1.0
 pkgrel=1
