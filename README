@@ -3,7 +3,7 @@
 TBW
 
 ===USAGE===
-Optionally create a configuartion file in ~/.imcrc
+Optionally create a configuartion file in ~/.pyimcrc
 
 This file can contain the following content:
 
@@ -31,7 +31,7 @@ height = -1
 list = 10
 indicator = True
 
-for simplicity, a default config is available in the downloaded source. Simply copy config to ~/.imcrc and adapt what is required for you.
+for simplicity, a default config is available in the downloaded source. Simply copy config to ~/.pyimcrc and adapt what is required for you.
 
 TBW
 
