@@ -117,7 +117,7 @@ class Config(object):
 			'height': '-1',
 			'list': '10',
 			'indicator': 'True'}
-		config_file = os.path.expanduser('~/.imcrc')
+		config_file = os.path.expanduser('~/.pyimcrc')
 		if os.path.lexists(config_file):
 			try:
 				parser = ConfigParser.SafeConfigParser()
