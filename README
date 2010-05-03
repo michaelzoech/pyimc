@@ -1,6 +1,4 @@
-===CONFIG===
-
-TBW
+General introduction what the tool is all about: TBW
 
 ===USAGE===
 Optionally create a configuartion file in ~/.pyimcrc
@@ -35,11 +33,19 @@ for simplicity, a default config is available in the downloaded source. Simply c
 
 TBW
 
-===DEVELOPMENT===
-
-TBW
-
 ===BUILD===
 
-TBW
+The pyimc software can be either installed on unix-like systems (including cygwin) using the build.sh script. Optionally, the path can be directly set to pyimc/pyimc using the pyimc.py script directly in command line. The installation process is NOT required!
+
+===DEPLOY===
+
+To deploy the software the following steps have to be done:
+
+1) follow the release guidelines contained in (http://github.com/nvie/gitflow). To push the version increase it in setup.py (don't forget to finish and update the CHANGELOG file)
+2) if finished with tagging and releaseing use the dist.sh script to build a distribution package
+3) upload the pyimc-X.X.X.zip to the github download section
+
+===DEVELOPMENT===
+
+Please use the git-flow workflow for development (http://github.com/nvie/gitflow)
 
