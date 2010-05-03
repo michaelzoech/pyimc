@@ -1,0 +1,13 @@
+===pyimc-0.1.0 20100503==
+First release of the pyimc instant messanger command line control tool.
+
+Bugs Fixed
+
+Features
+ * Configuration via .config file
+ * Skype & Pidgin dmenu chat open functionality
+
+Enhancements / Tasks
+ * distribution/build scripts
+ * initial documentation
+
