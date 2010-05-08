@@ -2,28 +2,7 @@
 # this configuration file configures pyimc to access only pidgin 
 # and provide the contacts in a dmenu at the bottom of the screen
 
-
 [DEFAULT]
 skype = False
 pidgin = True
-incase = True
-xmms = True
-bottom = True 
-defx = False
-x = 680
-defy = False
-y = 200
-defw = False
-w = 240
-deffn = False
-fn = \"-*-verdana-medium-r-*-*-16-*-*-*-*-*-iso10646-1\"
-nb = #000000
-nf = #9999CC
-sb = #000066
-sf = #FFFFFF
-resize = True
-vertical = False
-height = -1
-list = 10
-indicator = True
-
+menu = dmenu -b -i -xs -fn 'xft:Inconsolata:size=11' -nb #000000 -nf #9999cc -sb #000066 -sf #ffffff

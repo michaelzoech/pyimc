@@ -5,24 +5,4 @@
 [DEFAULT]
 skype = True
 pidgin = True
-incase = True
-xmms = True
-bottom = False
-defx = True
-x = 680
-defy = True
-y = 200
-defw = True
-w = 240
-deffn = True
-fn = \"-*-verdana-medium-r-*-*-16-*-*-*-*-*-iso10646-1\"
-nb = #000000
-nf = #9999CC
-sb = #000066
-sf = #FFFFFF
-resize = True
-vertical = True
-height = -1
-list = 10
-indicator = True
-
+menu = dmenu -l 10 -ni -rs -i -xs -x 680 -y 200 -w 240 -fn 'xft:Inconsolata:size=11' -nb #000000 -nf #9999cc -sb #000066 -sf #ffffff
