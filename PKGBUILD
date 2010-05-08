@@ -7,8 +7,8 @@ pkgdesc="control Pidgin and Skype via command line"
 arch=('any')
 url="http://github.com/crazymaik/pyimc"
 license=('BSD')
-depends=('python' 'dmenu')
-optdepends=('skype' 'pidgin' 'dmenu-vertical')
+depends=('python')
+optdepends=('skype' 'pidgin' 'dmenu')
 makedepends=('setuptools')
 source=(http://github.com/downloads/crazymaik/pyimc/$pkgname-$pkgver.zip)
 
