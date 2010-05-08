@@ -1,3 +1,16 @@
+===pyimc-0.2.0 200100508==
+
+Bugs Fixed
+
+Features
+
+Enhancements / Tasks
+ * provided archlinux pkgbuild
+ * move example scripts to contrib folder
+ * make pyimc usable without dmenu-vertical patch
+ * make menu call completely configurable
+ * drop required dmenu (-vertical) dependency
+
 ===pyimc-0.1.0 20100503==
 First release of the pyimc instant messanger command line control tool.
 

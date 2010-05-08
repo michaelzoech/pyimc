@@ -1,0 +1,8 @@
+# configuration file; move to ~/.pyimcrc
+# this configuration file configures pyimc to access only pidgin 
+# and provide the contacts in a dmenu at the bottom of the screen
+
+[DEFAULT]
+skype = False
+pidgin = True
+menu = dmenu -b -i -xs -fn 'xft:Inconsolata:size=11' -nb #000000 -nf #9999cc -sb #000066 -sf #ffffff

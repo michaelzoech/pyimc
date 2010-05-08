@@ -29,7 +29,7 @@ height = -1
 list = 10
 indicator = True
 
-for simplicity, a default config is available in the downloaded source. Simply copy config to ~/.pyimcrc and adapt what is required for you.
+For example also see the contrib folder in the downloaded distribution of pyimc
 
 TBW
 

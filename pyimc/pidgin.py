@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 '''
 Copyright 2010 Michael Zoech and Andreas Pieber. All rights reserved.
 
@@ -29,52 +27,39 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
-import sys
-import subprocess
 import dbus
-import os
 
-from config import Config
-from skype import SkypeWrapper
-from pidgin import PidginWrapper
+class PidginWrapper(object):
+	def __init__(self, bus):
+		try:
+			obj = bus.get_object('im.pidgin.purple.PurpleService',
+			                     '/im/pidgin/purple/PurpleObject')
+			self.proxy = dbus.Interface(obj, 'im.pidgin.purple.PurpleInterface')
+		except dbus.DBusException as e:
+			self.proxy = None
 
-def main():
-	config = Config()
+	def lookup_friends(self):
+		if self.proxy == None:
+			return {}
+		accounts = {}
+		self.friends = {}
+		self.accounts = {}
+		for account in self.proxy.PurpleAccountsGetAllActive():
+			proto = self.proxy.PurpleAccountGetProtocolName(account).lower()
+			self.accounts[proto] = account
+			self.friends[proto] = {}
+			accounts[proto] = []
+			for friend in self.proxy.PurpleFindBuddies(account, ''):
+				name = self.proxy.PurpleBuddyGetAlias(friend)
+				accounts[proto].append({'name': name, 'on': self.is_online(friend)})
+				self.friends[proto][name] = friend
+		return accounts
 
-	bus = dbus.SessionBus()
-	coll = {}
+	def open_chat(self, proto, name):
+		_name = self.proxy.PurpleBuddyGetName(self.friends[proto][name])
+		conv = self.proxy.PurpleConversationNew(1, self.accounts[proto], _name)
+		self.proxy.PurpleConversationPresent(conv)
 
-	if config.pidgin == 'True':
-		pidgin = PidginWrapper(bus)
-		coll.update(pidgin.lookup_friends())
-
-	if config.skype == 'True':
-		skype = SkypeWrapper(bus)
-		coll.update(skype.lookup_friends())
-
-	menu = config.menu.split()
-	p = subprocess.Popen(menu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-
-	for proto, friends in coll.iteritems():
-		for friend in friends:
-			out = '%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto)
-			outencoded = out.encode("ascii", "replace")
-			p.stdin.write(outencoded)
-
-	wanted = p.communicate()[0]
-	if wanted == "":
-		return 0
-
-	proto = wanted.split()[-1].lower()
-	name = wanted[:wanted.rfind(' on ')]
-
-	if proto == 'skype' and config.skype == 'True':
-		skype.open_chat(name)
-	else:
-		pidgin.open_chat(proto, name)
-
-	return 0
-
-if __name__ == '__main__':
-	sys.exit(main())
+	def is_online(self, friend):
+		return self.proxy.PurpleBuddyIsOnline(friend)
 

@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 '''
 Copyright 2010 Michael Zoech and Andreas Pieber. All rights reserved.
 
@@ -29,52 +27,50 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
-import sys
-import subprocess
 import dbus
-import os
 
-from config import Config
-from skype import SkypeWrapper
-from pidgin import PidginWrapper
+class SkypeWrapper(object):
+	def __init__(self, bus):
+		try:
+			self.proxy = bus.get_object('com.Skype.API', '/com/Skype')
+			self.proxy.Invoke('NAME imcontrol')
+			self.proxy.Invoke('PROTOCOL 8')
+		except dbus.DBusException:
+			self.proxy = None
 
-def main():
-	config = Config()
+	def lookup_friends(self):
+		if self.proxy == None:
+			return {}
+		self.friends = {}
+		accounts = {'skype': []}
+		for friend in self.search_friends():
+			name = self.get_name(friend)
+			accounts['skype'].append({'name': name, 'on': self.is_online(friend)})
+			self.friends[name] = friend
+		return accounts
 
-	bus = dbus.SessionBus()
-	coll = {}
+	def open_chat(self, name):
+		friend = self.friends[name]
+		res = self.proxy.Invoke('CHAT CREATE ' + friend)
+		self.proxy.Invoke('OPEN CHAT ' + res.split()[1])
 
-	if config.pidgin == 'True':
-		pidgin = PidginWrapper(bus)
-		coll.update(pidgin.lookup_friends())
+	def search_friends(self):
+		res = self.proxy.Invoke('SEARCH FRIENDS')
+		res = res.split(', ')
+		res[0] = res[0].split()[1]
+		return res
 
-	if config.skype == 'True':
-		skype = SkypeWrapper(bus)
-		coll.update(skype.lookup_friends())
+	def get_name(self, friend):
+		res = self.proxy.Invoke('GET USER %s DISPLAYNAME' % friend)
+		res = res.split()
+		if len(res) == 3:
+			res = self.proxy.Invoke('GET USER %s FULLNAME' % friend)
+			res = res.split()
+		if len(res) == 3:
+			res += [friend]
+		return ' '.join(res[3:])
 
-	menu = config.menu.split()
-	p = subprocess.Popen(menu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+	def is_online(self, friend):
+		return self.proxy.Invoke('GET USER %s ONLINESTATUS' % friend).split()[3] != 'OFFLINE'
 
-	for proto, friends in coll.iteritems():
-		for friend in friends:
-			out = '%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto)
-			outencoded = out.encode("ascii", "replace")
-			p.stdin.write(outencoded)
-
-	wanted = p.communicate()[0]
-	if wanted == "":
-		return 0
-
-	proto = wanted.split()[-1].lower()
-	name = wanted[:wanted.rfind(' on ')]
-
-	if proto == 'skype' and config.skype == 'True':
-		skype.open_chat(name)
-	else:
-		pidgin.open_chat(proto, name)
-
-	return 0
-
-if __name__ == '__main__':
-	sys.exit(main())
 
