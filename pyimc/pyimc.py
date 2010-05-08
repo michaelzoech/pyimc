@@ -34,48 +34,13 @@ import subprocess
 import dbus
 import os
 
-from config import Config 
+from config import Config
 from skype import SkypeWrapper
 from pidgin import PidginWrapper
 
-def buildDmenuCmd(config):
-	params = [] 
-	params.append("dmenu")
-	if config.incase == 'True': params.append("-i")
-	if config.vertical == 'True':
-		params.append("-l")
-		params.append(config.list)
-		params.append("-h")
-		params.append(config.height)
-	if config.resize == 'True': params.append("-rs")
-	if config.indicator == 'True': params.append("-ni")
-	if config.xmms == 'True': params.append("-xs")
-	if config.bottom == 'True': params.append("-b")
-	if config.defx == 'True':
-		params.append("-x")
-		params.append(config.x)
-	if config.defy == 'True':
-		params.append("-y")
-		params.append(config.y)
-	if config.defw == 'True':
-		params.append("-w")
-		params.append(config.w)
-	if config.deffn == 'True':
-		params.append("-fn")
-		params.append(config.fn)
-	params.append("-nb")
-	params.append(config.nb)
-	params.append("-nf")
-	params.append(config.nf)
-	params.append("-sb")
-	params.append(config.sb)
-	params.append("-sf")
-	params.append(config.sf)
-	return params
-
 def main():
 	config = Config()
-	
+
 	bus = dbus.SessionBus()
 	coll = {}
 
@@ -83,12 +48,12 @@ def main():
 		pidgin = PidginWrapper(bus)
 		coll.update(pidgin.lookup_friends())
 
-	if config.skype == 'True':	
+	if config.skype == 'True':
 		skype = SkypeWrapper(bus)
 		coll.update(skype.lookup_friends())
-	
-	dmenu = buildDmenuCmd(config)
-	p = subprocess.Popen(dmenu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+
+	menu = config.menu.split()
+	p = subprocess.Popen(menu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
 	for proto, friends in coll.iteritems():
 		for friend in friends:

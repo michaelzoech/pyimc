@@ -31,38 +31,18 @@ import os
 import ConfigParser
 
 class Config(object):
-	"""	
+	"""
 	A object to wrap a dictionary for easier configuration access.
-	
+
 	Based on Storage in web.py (public domain)
-	"""	
+	"""
 	def __init__(self):
 		self._config = {
 			# general options
 			'skype': 'True',
 			'pidgin': 'True',
 			# horicontal options
-			'incase': 'True',
-			'xmms': 'True',
-			'bottom': 'False',
-			'defx': 'False',
-			'x': '680',
-			'defy': 'False',
-			'y': '200',
-			'defw': 'False',
-			'w': '240',
-			'deffn': 'False',
-			'fn': '\"-*-verdana-medium-r-*-*-16-*-*-*-*-*-iso10646-1\"',
-			'nb': '#000000',
-			'nf': '#9999CC',
-			'sb': '#000066',
-			'sf': '#FFFFFF',
-			# vertically options
-			'resize': 'False',
-			'vertical': 'False',
-			'height': '-1',
-			'list': '10',
-			'indicator': 'True'}
+			'menu': 'dmenu'}
 		config_file = os.path.expanduser('~/.pyimcrc')
 		if os.path.lexists(config_file):
 			try:
@@ -77,35 +57,35 @@ class Config(object):
 	def get_config(self):
 		''' Get the contained configuration.'''
 		return self._config
-	
+
 	def __getattr__(self, key):
 		try:
 			return self._config[key]
 		except KeyError, k:
-			raise AttributeError, k 
-		
+			raise AttributeError, k
+
 	def __setattr__(self, key, value):
 		if key == '_config':
 			object.__setattr__(self, key, value)
 		else:
 			self._config[key] = value
-			
+
 	def __delattr__(self, key):
 		try:
 			del self._config[key]
 		except KeyError, k:
-			raise AttributeError, k 
+			raise AttributeError, k
 
 	# For container methods pass-through to the underlying config.
 	def __getitem__(self, key):
-		return self._config[key] 
-	
+		return self._config[key]
+
 	def __setitem__(self, key, value):
-		self._config[key] = value 
-		
+		self._config[key] = value
+
 	def __delitem__(self, key):
-		del self._config[key] 
-		
+		del self._config[key]
+
 	def __repr__(self):
 		return '<Storage ' + repr(self._config) + '>'
 
