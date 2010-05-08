@@ -1,7 +1,7 @@
 # Contributor: Michael Zoech <michi.zoech+arch at gmail>
 # Contributor: Andreas Pieber <anpieber at gmail>
 pkgname=pyimc
-pkgver=0.1.0
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="control Pidgin and Skype via command line"
 arch=('any')
@@ -18,4 +18,3 @@ build() {
   python setup.py install --root=${pkgdir} --optimize=1 || return 1
 }
 
-md5sums=('160ce50904c71d723a0fd33ea1388a90')
