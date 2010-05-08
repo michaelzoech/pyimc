@@ -18,4 +18,3 @@ build() {
   python setup.py install --root=${pkgdir} --optimize=1 || return 1
 }
 
-md5sums=('160ce50904c71d723a0fd33ea1388a90')
