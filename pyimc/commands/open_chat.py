@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 '''
 Copyright 2010 Michael Zoech and Andreas Pieber. All rights reserved.
 
@@ -29,29 +27,33 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
-import sys
 import subprocess
-import dbus
-import os
 
-from config import Config
-from skype import SkypeWrapper
-from pidgin import PidginWrapper
-from commands.open_chat import OpenChatCommand
+class OpenChatCommand(object):
+	def run(this, config, pidgin, skype):
+		coll = {}
+		if config.pidgin == 'True':
+			coll.update(pidgin.lookup_friends())
+		if config.skype == 'True':
+			coll.update(skype.lookup_friends())
 
-def main():
-	config = Config()
+		menu = config.menu.split()
+		p = subprocess.Popen(menu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
-	bus = dbus.SessionBus()
+		for proto, friends in coll.iteritems():
+			for friend in friends:
+				out = '%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto)
+				outencoded = out.encode("ascii", "replace")
+				p.stdin.write(outencoded)
 
-	pidgin = PidginWrapper(bus) if config.pidgin == 'True' else None
-	skype = SkypeWrapper(bus) if config.skype == 'True' else None
+		wanted = p.communicate()[0]
+		if wanted == "":
+			return 0
 
-	openchat = OpenChatCommand()
-	openchat.run(config, pidgin, skype)
+		proto = wanted.split()[-1].lower()
+		name = wanted[:wanted.rfind(' on ')]
 
-	return 0
-
-if __name__ == '__main__':
-	sys.exit(main())
-
+		if proto == 'skype' and config.skype == 'True':
+			skype.open_chat(name)
+		else:
+			pidgin.open_chat(proto, name)

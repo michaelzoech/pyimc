@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 '''
 Copyright 2010 Michael Zoech and Andreas Pieber. All rights reserved.
 
@@ -28,30 +26,4 @@ The views and conclusions contained in the software and documentation are those
 of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
-
-import sys
-import subprocess
-import dbus
-import os
-
-from config import Config
-from skype import SkypeWrapper
-from pidgin import PidginWrapper
-from commands.open_chat import OpenChatCommand
-
-def main():
-	config = Config()
-
-	bus = dbus.SessionBus()
-
-	pidgin = PidginWrapper(bus) if config.pidgin == 'True' else None
-	skype = SkypeWrapper(bus) if config.skype == 'True' else None
-
-	openchat = OpenChatCommand()
-	openchat.run(config, pidgin, skype)
-
-	return 0
-
-if __name__ == '__main__':
-	sys.exit(main())
 
