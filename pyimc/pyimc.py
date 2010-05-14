@@ -33,12 +33,24 @@ import sys
 import subprocess
 import dbus
 import os
+from pprint import pprint
 
 from config import Config
 from skype import SkypeWrapper
 from pidgin import PidginWrapper
 from commands.open_chat import OpenChatCommand
 from commands.toggle_roster import ToggleRosterCommand
+
+commands = {
+	"openchat": OpenChatCommand,
+	"toggle": ToggleRosterCommand
+}
+
+def usage():
+	print 'USAGE: pyimc <command> [<args>]'
+	print 'Supported commands:'
+	for (k,v) in commands.iteritems():
+		print '    %-10s %s' % (k,v.desc())
 
 def main():
 	args = sys.argv
@@ -49,17 +61,15 @@ def main():
 	skype = SkypeWrapper(bus) if config.skype == 'True' else None
 
 	if len(args) <= 1:
-		print 'USAGE: pyimc <command>'
-		return 0
+		usage()
+		return -1
 
-	if args[1] == 'openchat':
-		cmd = OpenChatCommand()
-	elif args[1] == 'toggle':
-		cmd = ToggleRosterCommand()
-	else:
-		print 'Unknown command %s' % args[1]
-		return 0
+	if args[1] not in commands:
+		print "ERROR: Unknown command '%s'" % args[1]
+		usage()
+		return -1
 
+	cmd = commands[args[1]]()
 	cmd.run(config, pidgin, skype, args[2:])
 
 	return 0

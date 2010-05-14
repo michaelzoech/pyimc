@@ -30,6 +30,10 @@ either expressed or implied, of Michael Zoech or Andreas Pieber.
 import subprocess
 
 class ToggleRosterCommand(object):
+	@staticmethod
+	def desc():
+		return "toggles the roster of your IM app"
+
 	def run(this, config, pidgin, skype, args):
 		if config.pidgin == 'False' and config.skype == 'True':
 			skype.toggle_roster()

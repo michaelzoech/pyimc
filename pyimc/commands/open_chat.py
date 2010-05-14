@@ -30,6 +30,10 @@ either expressed or implied, of Michael Zoech or Andreas Pieber.
 import subprocess
 
 class OpenChatCommand(object):
+	@staticmethod
+	def desc():
+		return "shows a menu to create a new buddy chat"
+
 	def run(this, config, pidgin, skype, args):
 		coll = {}
 		if config.pidgin == 'True':
