@@ -29,6 +29,7 @@ either expressed or implied, of Michael Zoech or Andreas Pieber.
 
 import os
 import ConfigParser
+import sys
 
 class Config(object):
 	"""

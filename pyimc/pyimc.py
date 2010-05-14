@@ -30,10 +30,7 @@ either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
 import sys
-import subprocess
 import dbus
-import os
-from pprint import pprint
 
 from config import Config
 from skype import SkypeWrapper
