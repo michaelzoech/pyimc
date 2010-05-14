@@ -38,17 +38,29 @@ from config import Config
 from skype import SkypeWrapper
 from pidgin import PidginWrapper
 from commands.open_chat import OpenChatCommand
+from commands.toggle_roster import ToggleRosterCommand
 
 def main():
+	args = sys.argv
 	config = Config()
-
 	bus = dbus.SessionBus()
 
 	pidgin = PidginWrapper(bus) if config.pidgin == 'True' else None
 	skype = SkypeWrapper(bus) if config.skype == 'True' else None
 
-	openchat = OpenChatCommand()
-	openchat.run(config, pidgin, skype)
+	if len(args) <= 1:
+		print 'USAGE: pyimc <command>'
+		return 0
+
+	if args[1] == 'openchat':
+		cmd = OpenChatCommand()
+	elif args[1] == 'toggle':
+		cmd = ToggleRosterCommand()
+	else:
+		print 'Unknown command %s' % args[1]
+		return 0
+
+	cmd.run(config, pidgin, skype, args[2:])
 
 	return 0
 

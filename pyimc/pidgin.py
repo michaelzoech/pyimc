@@ -63,3 +63,6 @@ class PidginWrapper(object):
 	def is_online(self, friend):
 		return self.proxy.PurpleBuddyIsOnline(friend)
 
+	def toggle_roster(self):
+		None
+

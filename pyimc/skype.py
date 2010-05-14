@@ -73,4 +73,6 @@ class SkypeWrapper(object):
 	def is_online(self, friend):
 		return self.proxy.Invoke('GET USER %s ONLINESTATUS' % friend).split()[3] != 'OFFLINE'
 
+	def toggle_roster(self):
+		None
 

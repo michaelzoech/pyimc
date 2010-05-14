@@ -29,31 +29,16 @@ either expressed or implied, of Michael Zoech or Andreas Pieber.
 
 import subprocess
 
-class OpenChatCommand(object):
+class ToggleRosterCommand(object):
 	def run(this, config, pidgin, skype, args):
-		coll = {}
-		if config.pidgin == 'True':
-			coll.update(pidgin.lookup_friends())
-		if config.skype == 'True':
-			coll.update(skype.lookup_friends())
-
-		menu = config.menu.split()
-		p = subprocess.Popen(menu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-
-		for proto, friends in coll.iteritems():
-			for friend in friends:
-				out = '%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto)
-				outencoded = out.encode("ascii", "replace")
-				p.stdin.write(outencoded)
-
-		wanted = p.communicate()[0]
-		if wanted == "":
-			return 0
-
-		proto = wanted.split()[-1].lower()
-		name = wanted[:wanted.rfind(' on ')]
-
-		if proto == 'skype' and config.skype == 'True':
-			skype.open_chat(name)
+		if config.pidgin == 'False' and config.skype == 'True':
+			skype.toggle_roster()
+		elif config.pidgin == 'True' and config.skype == 'False':
+			pidgin.toggle_roster()
 		else:
-			pidgin.open_chat(proto, name)
+			for arg in args:
+				if arg == 'pidgin':
+					pidgin.toggle_roster()
+				elif arg == 'skype':
+					skype.toggle_roster()
+
