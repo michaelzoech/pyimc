@@ -74,5 +74,6 @@ class SkypeWrapper(object):
 		return self.proxy.Invoke('GET USER %s ONLINESTATUS' % friend).split()[3] != 'OFFLINE'
 
 	def toggle_roster(self):
-		None
+		state = self.proxy.Invoke('GET WINDOWSTATE').split()[1]
+		self.proxy.Invoke('SET WINDOWSTATE ' + ('NORMAL' if state == 'HIDDEN' else 'HIDDEN'))
 
