@@ -35,19 +35,24 @@ import dbus
 from config import Config
 from skype import SkypeWrapper
 from pidgin import PidginWrapper
-from commands.open_chat import OpenChatCommand
-from commands.toggle_roster import ToggleRosterCommand
+import commands.toggle_roster
 
-commands = {
-	"openchat": OpenChatCommand,
-	"toggle": ToggleRosterCommand
+modules = {
+	'openchat': 'open_chat',
+	'toggle': 'toggle_roster'
 }
+
+def load_command_module(modname):
+	modname = 'commands.' + modname
+	exec('import %s' % modname)
+	return sys.modules[modname]
 
 def usage():
 	print 'USAGE: pyimc <command> [<args>]'
 	print 'Supported commands:'
-	for (k,v) in commands.iteritems():
-		print '    %-10s %s' % (k,v.desc())
+	for (k,v) in modules.iteritems():
+		mod = load_command_module(v)
+		print '    %-10s %s' % (k,mod.short_description)
 
 def main():
 	args = sys.argv
@@ -61,13 +66,13 @@ def main():
 		usage()
 		return -1
 
-	if args[1] not in commands:
+	if args[1] not in modules:
 		print "ERROR: Unknown command '%s'" % args[1]
 		usage()
 		return -1
 
-	cmd = commands[args[1]]()
-	cmd.run(config, pidgin, skype, args[2:])
+	mod = load_command_module(modules[args[1]])
+	mod.execute(config, pidgin, skype, args[2:])
 
 	return 0
 

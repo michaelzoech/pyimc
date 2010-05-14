@@ -29,35 +29,37 @@ either expressed or implied, of Michael Zoech or Andreas Pieber.
 
 import subprocess
 
-class OpenChatCommand(object):
-	@staticmethod
-	def desc():
-		return "shows a menu to create a new buddy chat"
+arg_format = ''
+short_description = 'show menu with buddies to create a new chat'
+long_description = '''
+the long description for open chat
+'''
 
-	def run(this, config, pidgin, skype, args):
-		coll = {}
-		if config.pidgin == 'True':
-			coll.update(pidgin.lookup_friends())
-		if config.skype == 'True':
-			coll.update(skype.lookup_friends())
+def execute(config, pidgin, skype, args):
+	coll = {}
+	if config.pidgin == 'True':
+		coll.update(pidgin.lookup_friends())
+	if config.skype == 'True':
+		coll.update(skype.lookup_friends())
 
-		menu = config.menu.split()
-		p = subprocess.Popen(menu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+	menu = config.menu.split()
+	p = subprocess.Popen(menu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
-		for proto, friends in coll.iteritems():
-			for friend in friends:
-				out = '%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto)
-				outencoded = out.encode("ascii", "replace")
-				p.stdin.write(outencoded)
+	for proto, friends in coll.iteritems():
+		for friend in friends:
+			out = '%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto)
+			outencoded = out.encode("ascii", "replace")
+			p.stdin.write(outencoded)
 
-		wanted = p.communicate()[0]
-		if wanted == "":
-			return 0
+	wanted = p.communicate()[0]
+	if wanted == "":
+		return 0
 
-		proto = wanted.split()[-1].lower()
-		name = wanted[:wanted.rfind(' on ')]
+	proto = wanted.split()[-1].lower()
+	name = wanted[:wanted.rfind(' on ')]
 
-		if proto == 'skype' and config.skype == 'True':
-			skype.open_chat(name)
-		else:
-			pidgin.open_chat(proto, name)
+	if proto == 'skype' and config.skype == 'True':
+		skype.open_chat(name)
+	else:
+		pidgin.open_chat(proto, name)
+

@@ -29,20 +29,21 @@ either expressed or implied, of Michael Zoech or Andreas Pieber.
 
 import subprocess
 
-class ToggleRosterCommand(object):
-	@staticmethod
-	def desc():
-		return "toggles the roster of your IM app"
+arg_format = "[pidgin] [skype]"
+short_description = "toggle the roster of your IM app"
+long_description = '''
+the long description for toggle roster
+'''
 
-	def run(this, config, pidgin, skype, args):
-		if config.pidgin == 'False' and config.skype == 'True':
-			skype.toggle_roster()
-		elif config.pidgin == 'True' and config.skype == 'False':
-			pidgin.toggle_roster()
-		else:
-			for arg in args:
-				if arg == 'pidgin':
-					pidgin.toggle_roster()
-				elif arg == 'skype':
-					skype.toggle_roster()
+def execute(config, pidgin, skype, args):
+	if config.pidgin == 'False' and config.skype == 'True':
+		skype.toggle_roster()
+	elif config.pidgin == 'True' and config.skype == 'False':
+		pidgin.toggle_roster()
+	else:
+		for arg in args:
+			if arg == 'pidgin':
+				pidgin.toggle_roster()
+			elif arg == 'skype':
+				skype.toggle_roster()
 
