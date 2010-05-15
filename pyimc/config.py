@@ -42,7 +42,6 @@ class Config(object):
 			# general options
 			'skype': 'True',
 			'pidgin': 'True',
-			# horicontal options
 			'menu': 'dmenu'}
 		config_file = os.path.expanduser('~/.pyimcrc')
 		if os.path.lexists(config_file):

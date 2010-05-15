@@ -34,10 +34,11 @@ the long description for toggle roster
 '''
 
 def execute(config, pidgin, skype, args):
-	if config.pidgin == 'False' and config.skype == 'True':
-		skype.toggle_roster()
-	elif config.pidgin == 'True' and config.skype == 'False':
-		pidgin.toggle_roster()
+	if len(args) == 0:
+		if config.skype == 'True':
+			skype.toggle_roster()
+		elif config.pidgin == 'True':
+			pidgin.toggle_roster()
 	else:
 		for arg in args:
 			if arg == 'pidgin':
