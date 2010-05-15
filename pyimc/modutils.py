@@ -29,45 +29,30 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
+import imp
+import os
 import sys
-import dbus
 
-import modutils
-from config import Config
-from skype import SkypeWrapper
-from pidgin import PidginWrapper
+def get_available_commands():
+	return package_contents('commands')
 
-def usage():
-	print 'USAGE: pyimc <command> [<args>]'
-	print 'Supported commands:'
-	for m in modutils.get_available_commands():
-		mod = modutils.load_command_module(m)
-		print '    %-10s %s' % (m, mod.short_description)
+def package_contents(pkgname):
+	file, pathname, description = imp.find_module(pkgname)
+	if file:
+		raise ImportError('Not a package: %r', pkgname)
+	modules = set([os.path.splitext(module)[0]
+		for module in os.listdir(pathname)
+		if module.endswith(('.py', '.pyc', '.pyo'))])
+	modules.remove('__init__')
+	return modules
 
-def main():
-	config = Config()
-	bus = dbus.SessionBus()
+def command_exists(cmdname):
+	file, pathname, description = imp.find_module('commands')
+	modpath = os.path.join(pathname, cmdname)
+	return os.path.exists(modpath + '.py') or os.path.exists(modpath + '.pyc')
 
-	pidgin = PidginWrapper(bus) if config.pidgin == 'True' else None
-	skype = SkypeWrapper(bus) if config.skype == 'True' else None
-
-	if len(sys.argv) <= 1:
-		usage()
-		return -1
-
-	action = sys.argv[1]
-	args = sys.argv[2:]
-
-	if not modutils.command_exists(action):
-		print "ERROR: Unknown command '%s'" % action
-		usage()
-		return -1
-
-	mod = modutils.load_command_module(action)
-	mod.execute(config, pidgin, skype, args)
-
-	return 0
-
-if __name__ == '__main__':
-	sys.exit(main())
+def load_command_module(modname):
+	modname = 'commands.' + modname
+	exec('import %s' % modname)
+	return sys.modules[modname]
 
