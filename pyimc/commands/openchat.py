@@ -31,8 +31,7 @@ import subprocess
 
 arg_format = ''
 short_description = 'show menu with buddies to create a new chat'
-long_description = '''
-the long description for open chat
+long_description = '''\
 '''
 
 def execute(config, pidgin, skype, args):

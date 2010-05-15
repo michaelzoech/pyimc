@@ -29,8 +29,7 @@ either expressed or implied, of Michael Zoech or Andreas Pieber.
 
 arg_format = "[pidgin] [skype]"
 short_description = "toggle the roster of your IM app"
-long_description = '''
-the long description for toggle roster
+long_description = '''\
 '''
 
 def execute(config, pidgin, skype, args):
