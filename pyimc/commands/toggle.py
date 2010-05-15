@@ -27,8 +27,6 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
-import subprocess
-
 arg_format = "[pidgin] [skype]"
 short_description = "toggle the roster of your IM app"
 long_description = '''
