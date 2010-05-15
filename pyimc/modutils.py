@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 '''
 Copyright 2010 Michael Zoech and Andreas Pieber. All rights reserved.
 
@@ -27,65 +29,30 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
+import imp
 import os
-import ConfigParser
 import sys
 
-class Config(object):
-	"""
-	A object to wrap a dictionary for easier configuration access.
+def get_available_commands():
+	return package_contents('commands')
 
-	Based on Storage in web.py (public domain)
-	"""
-	def __init__(self):
-		self._config = {
-			# general options
-			'skype': 'True',
-			'pidgin': 'True',
-			'menu': 'dmenu'}
-		config_file = os.path.expanduser('~/.pyimcrc')
-		if os.path.lexists(config_file):
-			try:
-				parser = ConfigParser.SafeConfigParser()
-				f = open(config_file)
-				parser.readfp(f)
-				self._config.update(dict(parser.items('DEFAULT', raw=True)))
-			except (IOError, ConfigParser.ParsingError), e:
-				print >> sys.stderr, "Configuration file can not be read %s\n%s" % (config_file, e)
-				sys.exit(1)
+def package_contents(pkgname):
+	file, pathname, description = imp.find_module(pkgname)
+	if file:
+		raise ImportError('Not a package: %r', pkgname)
+	modules = set([os.path.splitext(module)[0]
+		for module in os.listdir(pathname)
+		if module.endswith(('.py', '.pyc', '.pyo'))])
+	modules.remove('__init__')
+	return modules
 
-	def get_config(self):
-		''' Get the contained configuration.'''
-		return self._config
+def command_exists(cmdname):
+	file, pathname, description = imp.find_module('commands')
+	modpath = os.path.join(pathname, cmdname)
+	return os.path.exists(modpath + '.py') or os.path.exists(modpath + '.pyc')
 
-	def __getattr__(self, key):
-		try:
-			return self._config[key]
-		except KeyError, k:
-			raise AttributeError, k
-
-	def __setattr__(self, key, value):
-		if key == '_config':
-			object.__setattr__(self, key, value)
-		else:
-			self._config[key] = value
-
-	def __delattr__(self, key):
-		try:
-			del self._config[key]
-		except KeyError, k:
-			raise AttributeError, k
-
-	# For container methods pass-through to the underlying config.
-	def __getitem__(self, key):
-		return self._config[key]
-
-	def __setitem__(self, key, value):
-		self._config[key] = value
-
-	def __delitem__(self, key):
-		del self._config[key]
-
-	def __repr__(self):
-		return '<Storage ' + repr(self._config) + '>'
+def load_command_module(modname):
+	modname = 'commands.' + modname
+	exec('import %s' % modname)
+	return sys.modules[modname]
 

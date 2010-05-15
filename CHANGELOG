@@ -1,3 +1,16 @@
+===pyimc-0.3.0 20010050X==
+
+Bugs Fixed
+
+Features
+ * toggle Skype buddy list command
+
+Enhancements / Tasks
+ * command support
+ * command 'help' to list all available commands
+ * command 'openchat' for old functionality
+ * command 'toggle' to toggle the im buddy list
+
 ===pyimc-0.2.0 200100508==
 
 Bugs Fixed

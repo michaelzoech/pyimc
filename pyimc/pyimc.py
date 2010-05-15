@@ -30,48 +30,35 @@ either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
 import sys
-import subprocess
 import dbus
-import os
 
+import modutils
 from config import Config
 from skype import SkypeWrapper
 from pidgin import PidginWrapper
+from commands.help import usage
 
 def main():
 	config = Config()
-
 	bus = dbus.SessionBus()
-	coll = {}
 
-	if config.pidgin == 'True':
-		pidgin = PidginWrapper(bus)
-		coll.update(pidgin.lookup_friends())
+	pidgin = PidginWrapper(bus) if config.pidgin == 'True' else None
+	skype = SkypeWrapper(bus) if config.skype == 'True' else None
 
-	if config.skype == 'True':
-		skype = SkypeWrapper(bus)
-		coll.update(skype.lookup_friends())
+	if len(sys.argv) <= 1:
+		usage()
+		return -1
 
-	menu = config.menu.split()
-	p = subprocess.Popen(menu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+	action = sys.argv[1]
+	args = sys.argv[2:]
 
-	for proto, friends in coll.iteritems():
-		for friend in friends:
-			out = '%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto)
-			outencoded = out.encode("ascii", "replace")
-			p.stdin.write(outencoded)
+	if not modutils.command_exists(action):
+		print "ERROR: Unknown command '%s'" % action
+		usage()
+		return -1
 
-	wanted = p.communicate()[0]
-	if wanted == "":
-		return 0
-
-	proto = wanted.split()[-1].lower()
-	name = wanted[:wanted.rfind(' on ')]
-
-	if proto == 'skype' and config.skype == 'True':
-		skype.open_chat(name)
-	else:
-		pidgin.open_chat(proto, name)
+	mod = modutils.load_command_module(action)
+	mod.execute(config, pidgin, skype, args)
 
 	return 0
 

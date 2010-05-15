@@ -27,65 +27,38 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
-import os
-import ConfigParser
-import sys
+import subprocess
 
-class Config(object):
-	"""
-	A object to wrap a dictionary for easier configuration access.
+arg_format = ''
+short_description = 'show menu with buddies to create a new chat'
+long_description = '''\
+'''
 
-	Based on Storage in web.py (public domain)
-	"""
-	def __init__(self):
-		self._config = {
-			# general options
-			'skype': 'True',
-			'pidgin': 'True',
-			'menu': 'dmenu'}
-		config_file = os.path.expanduser('~/.pyimcrc')
-		if os.path.lexists(config_file):
-			try:
-				parser = ConfigParser.SafeConfigParser()
-				f = open(config_file)
-				parser.readfp(f)
-				self._config.update(dict(parser.items('DEFAULT', raw=True)))
-			except (IOError, ConfigParser.ParsingError), e:
-				print >> sys.stderr, "Configuration file can not be read %s\n%s" % (config_file, e)
-				sys.exit(1)
+def execute(config, pidgin, skype, args):
+	coll = {}
+	if config.pidgin == 'True':
+		coll.update(pidgin.lookup_friends())
+	if config.skype == 'True':
+		coll.update(skype.lookup_friends())
 
-	def get_config(self):
-		''' Get the contained configuration.'''
-		return self._config
+	menu = config.menu.split()
+	p = subprocess.Popen(menu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
-	def __getattr__(self, key):
-		try:
-			return self._config[key]
-		except KeyError, k:
-			raise AttributeError, k
+	for proto, friends in coll.iteritems():
+		for friend in friends:
+			out = '%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto)
+			outencoded = out.encode("ascii", "replace")
+			p.stdin.write(outencoded)
 
-	def __setattr__(self, key, value):
-		if key == '_config':
-			object.__setattr__(self, key, value)
-		else:
-			self._config[key] = value
+	wanted = p.communicate()[0]
+	if wanted == "":
+		return 0
 
-	def __delattr__(self, key):
-		try:
-			del self._config[key]
-		except KeyError, k:
-			raise AttributeError, k
+	proto = wanted.split()[-1].lower()
+	name = wanted[:wanted.rfind(' on ')]
 
-	# For container methods pass-through to the underlying config.
-	def __getitem__(self, key):
-		return self._config[key]
-
-	def __setitem__(self, key, value):
-		self._config[key] = value
-
-	def __delitem__(self, key):
-		del self._config[key]
-
-	def __repr__(self):
-		return '<Storage ' + repr(self._config) + '>'
+	if proto == 'skype' and config.skype == 'True':
+		skype.open_chat(name)
+	else:
+		pidgin.open_chat(proto, name)
 
