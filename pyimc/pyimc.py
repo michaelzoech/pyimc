@@ -29,18 +29,29 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
+import imp
+import os
 import sys
 import dbus
 
 from config import Config
 from skype import SkypeWrapper
 from pidgin import PidginWrapper
-import commands.toggle_roster
 
-modules = {
-	'openchat': 'open_chat',
-	'toggle': 'toggle_roster'
-}
+def package_contents(pkgname):
+	file, pathname, description = imp.find_module(pkgname)
+	if file:
+		raise ImportError('Not a package: %r', pkgname)
+	modules = set([os.path.splitext(module)[0]
+		for module in os.listdir(pathname)
+		if module.endswith(('.py', '.pyc', '.pyo'))])
+	modules.remove('__init__')
+	return modules
+
+def command_exists(cmdname):
+	file, pathname, description = imp.find_module('commands')
+	modpath = os.path.join(pathname, cmdname)
+	return os.path.exists(modpath + '.py') or os.path.exists(modpath + '.pyc')
 
 def load_command_module(modname):
 	modname = 'commands.' + modname
@@ -50,29 +61,31 @@ def load_command_module(modname):
 def usage():
 	print 'USAGE: pyimc <command> [<args>]'
 	print 'Supported commands:'
-	for (k,v) in modules.iteritems():
-		mod = load_command_module(v)
-		print '    %-10s %s' % (k,mod.short_description)
+	for m in package_contents('commands'):
+		mod = load_command_module(m)
+		print '    %-10s %s' % (m, mod.short_description)
 
 def main():
-	args = sys.argv
 	config = Config()
 	bus = dbus.SessionBus()
 
 	pidgin = PidginWrapper(bus) if config.pidgin == 'True' else None
 	skype = SkypeWrapper(bus) if config.skype == 'True' else None
 
-	if len(args) <= 1:
+	if len(sys.argv) <= 1:
 		usage()
 		return -1
 
-	if args[1] not in modules:
-		print "ERROR: Unknown command '%s'" % args[1]
+	action = sys.argv[1]
+	args = sys.argv[2:]
+
+	if not command_exists(action):
+		print "ERROR: Unknown command '%s'" % action
 		usage()
 		return -1
 
-	mod = load_command_module(modules[args[1]])
-	mod.execute(config, pidgin, skype, args[2:])
+	mod = load_command_module(action)
+	mod.execute(config, pidgin, skype, args)
 
 	return 0
 
