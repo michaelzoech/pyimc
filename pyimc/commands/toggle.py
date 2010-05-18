@@ -36,7 +36,7 @@ def execute(config, pidgin, skype, args):
 	if len(args) == 0:
 		if config.skype == 'True':
 			skype.toggle_roster()
-		elif config.pidgin == 'True':
+		if config.pidgin == 'True':
 			pidgin.toggle_roster()
 	else:
 		for arg in args:
