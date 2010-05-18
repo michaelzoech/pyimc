@@ -64,5 +64,6 @@ class PidginWrapper(object):
 		return self.proxy.PurpleBuddyIsOnline(friend)
 
 	def toggle_roster(self):
+		print 'WARNING: toggle of pidgin roster not implemented'
 		None
 
