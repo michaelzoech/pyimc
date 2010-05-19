@@ -15,7 +15,7 @@ source=(http://github.com/downloads/crazymaik/pyimc/$pkgname-$pkgver.zip)
 
 build() {
   SRC=${srcdir}/"$pkgname-$pkgver"
-  DOC='/usr/share/doc/pyimc/'
+  DOC=${pkgdir}/usr/share/doc/pyimc/
 
   echo "Installing pyimc"
   cd $SRC
