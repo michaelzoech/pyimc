@@ -36,7 +36,7 @@ import modutils
 from config import Config
 from skype import SkypeWrapper
 from pidgin import PidginWrapper
-from commands.help import usage
+from help import usage
 
 def main():
 	config = Config()

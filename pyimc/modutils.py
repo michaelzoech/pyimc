@@ -34,7 +34,9 @@ import os
 import sys
 
 def get_available_commands():
-	return package_contents('commands')
+	cmds = package_contents('commands')
+	cmds.add('help')
+	return cmds
 
 def package_contents(pkgname):
 	file, pathname, description = imp.find_module(pkgname)
@@ -47,12 +49,15 @@ def package_contents(pkgname):
 	return modules
 
 def command_exists(cmdname):
+	if (cmdname == 'help'):
+		return True
 	file, pathname, description = imp.find_module('commands')
 	modpath = os.path.join(pathname, cmdname)
 	return os.path.exists(modpath + '.py') or os.path.exists(modpath + '.pyc')
 
 def load_command_module(modname):
-	modname = 'commands.' + modname
+	if modname != 'help':
+		modname = 'commands.' + modname
 	exec('import %s' % modname)
 	return sys.modules[modname]
 
