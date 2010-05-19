@@ -29,5 +29,3 @@ build() {
   cp $SRC/README $DOC
 }
 
-md5sums=('d83e0e843956ac26b3db742968fb0d2e')
-
