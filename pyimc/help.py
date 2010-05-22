@@ -38,7 +38,7 @@ printed.
 '''
 
 def execute(config, pidgin, skype, args):
-	if len(args) != 1 or not modutils.command_exists(args[0]):
+	if len(args) != 1 or not args[0] in modutils.get_available_commands():
 		usage()
 		return
 	cmd = args[0]
