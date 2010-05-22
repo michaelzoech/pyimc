@@ -73,6 +73,6 @@ setup(name='pyimc',
       license = 'BSD',
       install_requires = [ ],
       packages = find_packages(),
-      entry_points = {'console_scripts': [ 'pyimc = pyimc.pyimc:main']}
+      entry_points = {'console_scripts': [ 'pyimc = pyimc.main:main']}
      )
 

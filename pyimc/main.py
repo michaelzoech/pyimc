@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 '''
 Copyright 2010 Michael Zoech and Andreas Pieber. All rights reserved.
 
@@ -61,7 +59,4 @@ def main():
 	mod.execute(config, pidgin, skype, args)
 
 	return 0
-
-if __name__ == '__main__':
-	sys.exit(main())
 
