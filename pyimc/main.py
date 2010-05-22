@@ -50,12 +50,12 @@ def main():
 	action = sys.argv[1]
 	args = sys.argv[2:]
 
-	if not modutils.command_exists(action):
+	mod = modutils.load_command_module(action)
+	if mod == None:
 		print "ERROR: Unknown command '%s'" % action
 		usage()
 		return -1
 
-	mod = modutils.load_command_module(action)
 	mod.execute(config, pidgin, skype, args)
 
 	return 0

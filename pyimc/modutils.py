@@ -29,35 +29,35 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
-import imp
 import os
 import sys
 
-def get_available_commands():
-	cmds = package_contents('commands')
-	cmds.add('help')
-	return cmds
-
 def package_contents(pkgname):
-	file, pathname, description = imp.find_module(pkgname)
-	if file:
-		raise ImportError('Not a package: %r', pkgname)
-	modules = set([os.path.splitext(module)[0]
-		for module in os.listdir(pathname)
-		if module.endswith(('.py', '.pyc', '.pyo'))])
+	pkgpath = pkgname.replace('.', '/')
+	modules = set()
+	for p in sys.path:
+		searchpath = os.path.join(p, pkgpath)
+		if not os.path.exists(searchpath):
+			continue
+		for f in os.listdir(searchpath):
+			if f.endswith(('.py', '.pyc', '.pyo')):
+				modules.add(os.path.splitext(f)[0])
 	modules.remove('__init__')
 	return modules
 
-def command_exists(cmdname):
-	if (cmdname == 'help'):
-		return True
-	file, pathname, description = imp.find_module('commands')
-	modpath = os.path.join(pathname, cmdname)
-	return os.path.exists(modpath + '.py') or os.path.exists(modpath + '.pyc')
+def get_available_commands():
+	cmds = package_contents('pyimc.commands')
+	cmds.add('help')
+	return cmds
 
 def load_command_module(modname):
-	if modname != 'help':
-		modname = 'commands.' + modname
-	exec('import %s' % modname)
-	return sys.modules[modname]
+	if modname == 'help':
+		modname = 'pyimc.help'
+	else:
+		modname = 'pyimc.commands.' + modname
+	try:
+		exec('import %s' % modname)
+		return sys.modules[modname]
+	except ImportError:
+		return None
 
