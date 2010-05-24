@@ -27,65 +27,36 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
-import os
-import ConfigParser
 import sys
+import dbus
 
-class Config(object):
-	"""
-	A object to wrap a dictionary for easier configuration access.
+import modutils
+from config import Config
+from skype import SkypeWrapper
+from pidgin import PidginWrapper
+from help import usage
 
-	Based on Storage in web.py (public domain)
-	"""
-	def __init__(self):
-		self._config = {
-			# general options
-			'skype': 'True',
-			'pidgin': 'True',
-			'menu': 'dmenu'}
-		config_file = os.path.expanduser('~/.pyimcrc')
-		if os.path.lexists(config_file):
-			try:
-				parser = ConfigParser.SafeConfigParser()
-				f = open(config_file)
-				parser.readfp(f)
-				self._config.update(dict(parser.items('DEFAULT', raw=True)))
-			except (IOError, ConfigParser.ParsingError), e:
-				print >> sys.stderr, "Configuration file can not be read %s\n%s" % (config_file, e)
-				sys.exit(1)
+def main():
+	config = Config()
+	bus = dbus.SessionBus()
 
-	def get_config(self):
-		''' Get the contained configuration.'''
-		return self._config
+	pidgin = PidginWrapper(bus) if config.pidgin == 'True' else None
+	skype = SkypeWrapper(bus) if config.skype == 'True' else None
 
-	def __getattr__(self, key):
-		try:
-			return self._config[key]
-		except KeyError, k:
-			raise AttributeError, k
+	if len(sys.argv) <= 1:
+		usage()
+		return -1
 
-	def __setattr__(self, key, value):
-		if key == '_config':
-			object.__setattr__(self, key, value)
-		else:
-			self._config[key] = value
+	action = sys.argv[1]
+	args = sys.argv[2:]
 
-	def __delattr__(self, key):
-		try:
-			del self._config[key]
-		except KeyError, k:
-			raise AttributeError, k
+	mod = modutils.load_command_module(action)
+	if mod == None:
+		print "ERROR: Unknown command '%s'" % action
+		usage()
+		return -1
 
-	# For container methods pass-through to the underlying config.
-	def __getitem__(self, key):
-		return self._config[key]
+	mod.execute(config, pidgin, skype, args)
 
-	def __setitem__(self, key, value):
-		self._config[key] = value
-
-	def __delitem__(self, key):
-		del self._config[key]
-
-	def __repr__(self):
-		return '<Storage ' + repr(self._config) + '>'
+	return 0
 

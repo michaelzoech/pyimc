@@ -27,65 +27,31 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
-import os
-import ConfigParser
-import sys
+import modutils
 
-class Config(object):
-	"""
-	A object to wrap a dictionary for easier configuration access.
+arg_format = '[command]'
+short_description = 'print help about all or one specific command'
+long_description = '''\
+Print a list of all available commands and their short descriptions.
+If a command name is given as argument a detailed description is
+printed.
+'''
 
-	Based on Storage in web.py (public domain)
-	"""
-	def __init__(self):
-		self._config = {
-			# general options
-			'skype': 'True',
-			'pidgin': 'True',
-			'menu': 'dmenu'}
-		config_file = os.path.expanduser('~/.pyimcrc')
-		if os.path.lexists(config_file):
-			try:
-				parser = ConfigParser.SafeConfigParser()
-				f = open(config_file)
-				parser.readfp(f)
-				self._config.update(dict(parser.items('DEFAULT', raw=True)))
-			except (IOError, ConfigParser.ParsingError), e:
-				print >> sys.stderr, "Configuration file can not be read %s\n%s" % (config_file, e)
-				sys.exit(1)
+def execute(config, pidgin, skype, args):
+	if len(args) != 1 or not args[0] in modutils.get_available_commands():
+		usage()
+		return
+	cmd = args[0]
+	mod = modutils.load_command_module(cmd)
+	print 'Help for command "%s"' % cmd
+	print 'Usage: pyimc %s %s' % (cmd, mod.arg_format)
+	print mod.short_description
+	print mod.long_description
 
-	def get_config(self):
-		''' Get the contained configuration.'''
-		return self._config
-
-	def __getattr__(self, key):
-		try:
-			return self._config[key]
-		except KeyError, k:
-			raise AttributeError, k
-
-	def __setattr__(self, key, value):
-		if key == '_config':
-			object.__setattr__(self, key, value)
-		else:
-			self._config[key] = value
-
-	def __delattr__(self, key):
-		try:
-			del self._config[key]
-		except KeyError, k:
-			raise AttributeError, k
-
-	# For container methods pass-through to the underlying config.
-	def __getitem__(self, key):
-		return self._config[key]
-
-	def __setitem__(self, key, value):
-		self._config[key] = value
-
-	def __delitem__(self, key):
-		del self._config[key]
-
-	def __repr__(self):
-		return '<Storage ' + repr(self._config) + '>'
+def usage():
+	print 'USAGE: pyimc <command> [<args>]'
+	print 'Supported commands:'
+	for m in modutils.get_available_commands():
+		mod = modutils.load_command_module(m)
+		print '    %-10s %s' % (m, mod.short_description)
 

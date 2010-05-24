@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 '''
 Copyright 2010 Michael Zoech and Andreas Pieber. All rights reserved.
 
@@ -29,27 +27,18 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
-import sys
 import subprocess
-import dbus
-import os
 
-from config import Config
-from skype import SkypeWrapper
-from pidgin import PidginWrapper
+arg_format = ''
+short_description = 'show menu with buddies to create a new chat'
+long_description = '''\
+'''
 
-def main():
-	config = Config()
-
-	bus = dbus.SessionBus()
+def execute(config, pidgin, skype, args):
 	coll = {}
-
 	if config.pidgin == 'True':
-		pidgin = PidginWrapper(bus)
 		coll.update(pidgin.lookup_friends())
-
 	if config.skype == 'True':
-		skype = SkypeWrapper(bus)
 		coll.update(skype.lookup_friends())
 
 	menu = config.menu.split()
@@ -72,9 +61,4 @@ def main():
 		skype.open_chat(name)
 	else:
 		pidgin.open_chat(proto, name)
-
-	return 0
-
-if __name__ == '__main__':
-	sys.exit(main())
 

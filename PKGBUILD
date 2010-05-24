@@ -1,7 +1,7 @@
 # Contributor: Michael Zoech <michi.zoech+arch at gmail>
 # Contributor: Andreas Pieber <anpieber at gmail>
 pkgname=pyimc
-pkgver=0.2.0
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="control Pidgin and Skype via command line"
 arch=('any')
@@ -10,11 +10,22 @@ license=('BSD')
 depends=('python')
 optdepends=('skype' 'pidgin' 'dmenu')
 makedepends=('setuptools')
+install='pyimc.install'
 source=(http://github.com/downloads/crazymaik/pyimc/$pkgname-$pkgver.zip)
 
 build() {
-  cd ${srcdir}/"$pkgname-$pkgver"
+  SRC=${srcdir}/"$pkgname-$pkgver"
+  DOC=${pkgdir}/usr/share/doc/pyimc/
+
+  echo "Installing pyimc"
+  cd $SRC
   python setup.py build || return 1
   python setup.py install --root=${pkgdir} --optimize=1 || return 1
+
+  echo "Installing docs"
+  mkdir -p $DOC
+  cp $SRC/CHANGELOG $DOC
+  cp $SRC/LICENSE $DOC
+  cp $SRC/README $DOC
 }
 

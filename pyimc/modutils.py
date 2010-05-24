@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 '''
 Copyright 2010 Michael Zoech and Andreas Pieber. All rights reserved.
 
@@ -28,64 +30,34 @@ either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
 import os
-import ConfigParser
 import sys
 
-class Config(object):
-	"""
-	A object to wrap a dictionary for easier configuration access.
+def package_contents(pkgname):
+	pkgpath = pkgname.replace('.', '/')
+	modules = set()
+	for p in sys.path:
+		searchpath = os.path.join(p, pkgpath)
+		if not os.path.exists(searchpath):
+			continue
+		for f in os.listdir(searchpath):
+			if f.endswith(('.py', '.pyc', '.pyo')):
+				modules.add(os.path.splitext(f)[0])
+	modules.remove('__init__')
+	return modules
 
-	Based on Storage in web.py (public domain)
-	"""
-	def __init__(self):
-		self._config = {
-			# general options
-			'skype': 'True',
-			'pidgin': 'True',
-			'menu': 'dmenu'}
-		config_file = os.path.expanduser('~/.pyimcrc')
-		if os.path.lexists(config_file):
-			try:
-				parser = ConfigParser.SafeConfigParser()
-				f = open(config_file)
-				parser.readfp(f)
-				self._config.update(dict(parser.items('DEFAULT', raw=True)))
-			except (IOError, ConfigParser.ParsingError), e:
-				print >> sys.stderr, "Configuration file can not be read %s\n%s" % (config_file, e)
-				sys.exit(1)
+def get_available_commands():
+	cmds = package_contents('pyimc.commands')
+	cmds.add('help')
+	return cmds
 
-	def get_config(self):
-		''' Get the contained configuration.'''
-		return self._config
-
-	def __getattr__(self, key):
-		try:
-			return self._config[key]
-		except KeyError, k:
-			raise AttributeError, k
-
-	def __setattr__(self, key, value):
-		if key == '_config':
-			object.__setattr__(self, key, value)
-		else:
-			self._config[key] = value
-
-	def __delattr__(self, key):
-		try:
-			del self._config[key]
-		except KeyError, k:
-			raise AttributeError, k
-
-	# For container methods pass-through to the underlying config.
-	def __getitem__(self, key):
-		return self._config[key]
-
-	def __setitem__(self, key, value):
-		self._config[key] = value
-
-	def __delitem__(self, key):
-		del self._config[key]
-
-	def __repr__(self):
-		return '<Storage ' + repr(self._config) + '>'
+def load_command_module(modname):
+	if modname == 'help':
+		modname = 'pyimc.help'
+	else:
+		modname = 'pyimc.commands.' + modname
+	try:
+		exec('import %s' % modname)
+		return sys.modules[modname]
+	except ImportError:
+		return None
 

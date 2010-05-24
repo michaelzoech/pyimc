@@ -1,33 +1,20 @@
 General introduction what the tool is all about: TBW
 
 ===USAGE===
-Optionally create a configuartion file in ~/.pyimcrc
 
-This file can contain the following content:
+pyimc currently supports the following commands:
+
+  * openchat  - show menu with buddies to create a new chat
+  * toggle    - toggle the buddy roster (only skype support for now)
+  * help      - print help information
+
+Optionally create a configuration file in ~/.pyimcrc. This file can
+contain the following settings (following are the default values):
 
 [DEFAULT]
 skype = True
 pidgin = True
-incase = True
-xmms = True
-bottom = True 
-defx = False
-x = 680
-defy = False
-y = 200
-defw = False
-w = 240
-deffn = False
-fn = \"-*-verdana-medium-r-*-*-16-*-*-*-*-*-iso10646-1\"
-nb = #000000
-nf = #9999CC
-sb = #000066
-sf = #FFFFFF
-resize = True
-vertical = False
-height = -1
-list = 10
-indicator = True
+menu = dmenu
 
 For example also see the contrib folder in the downloaded distribution of pyimc
 
@@ -35,14 +22,20 @@ TBW
 
 ===BUILD===
 
-The pyimc software can be either installed on unix-like systems (including cygwin) using the build.sh script. Optionally, the path can be directly set to pyimc/pyimc using the pyimc.py script directly in command line. The installation process is NOT required!
+The pyimc software can be either installed on unix-like systems (including
+cygwin) using the build.sh script. Optionally, the path can be directly
+set to pyimc/pyimc using the pyimc.py script directly in command line. The
+installation process is NOT required!
 
 ===DEPLOY===
 
 To deploy the software the following steps have to be done:
 
-1) follow the release guidelines contained in (http://github.com/nvie/gitflow). To push the version increase it in setup.py (don't forget to finish and update the CHANGELOG file); The releases should tagged with pyimc-VERSION
-2) if finished with tagging and releaseing use the dist.sh script to build a distribution package
+1) follow the release guidelines contained in (http://github.com/nvie/gitflow).
+   To push the version increase it in setup.py (don't forget to finish and
+   update the CHANGELOG file); The releases should tagged with pyimc-VERSION
+2) if finished with tagging and releaseing use the dist.sh script to build a
+   distribution package
 3) upload the pyimc-X.X.X.zip to the github download section
 
 ===DEVELOPMENT===

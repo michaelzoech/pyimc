@@ -1,26 +1,39 @@
-===pyimc-0.2.0 200100508==
+===pyimc-0.3.0 20100518===
+
+Bugs Fixed
+
+Features
+ + toggle Skype buddy list command
+
+Enhancements / Tasks
+ + command support
+ + command 'help' to list all available commands
+ + command 'openchat' for old functionality
+ + command 'toggle' to toggle the im buddy list
+
+===pyimc-0.2.0 20100508===
 
 Bugs Fixed
 
 Features
 
 Enhancements / Tasks
- * provided archlinux pkgbuild
- * move example scripts to contrib folder
- * make pyimc usable without dmenu-vertical patch
- * make menu call completely configurable
- * drop required dmenu (-vertical) dependency
+ + provided archlinux pkgbuild
+ + move example scripts to contrib folder
+ + make pyimc usable without dmenu-vertical patch
+ + make menu call completely configurable
+ + drop required dmenu (-vertical) dependency
 
-===pyimc-0.1.0 20100503==
+===pyimc-0.1.0 20100503====
 First release of the pyimc instant messanger command line control tool.
 
 Bugs Fixed
 
 Features
- * Configuration via .config file
- * Skype & Pidgin dmenu chat open functionality
+ + Configuration via .config file
+ + Skype & Pidgin dmenu chat open functionality
 
 Enhancements / Tasks
- * distribution/build scripts
- * initial documentation
+ + distribution/build scripts
+ + initial documentation
 

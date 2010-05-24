@@ -55,7 +55,7 @@ class UltraMagicString(object):
         return self.value.split(*args, **kw)
 
 setup(name='pyimc',
-      version = '0.1.0',
+      version = '0.3.0',
       description = 'Provide command line control over a wide range of different instant messanger, such as skype or pidgin.',
       maintainer = 'Michael Zoech, Andreas Pieber',
       maintainer_email = 'anpieber at gmail, michi.zoech+arch at gmail',
@@ -73,6 +73,6 @@ setup(name='pyimc',
       license = 'BSD',
       install_requires = [ ],
       packages = find_packages(),
-      entry_points = {'console_scripts': [ 'pyimc = pyimc.pyimc:main']}
+      entry_points = {'console_scripts': [ 'pyimc = pyimc.main:main']}
      )
 
