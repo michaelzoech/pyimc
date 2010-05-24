@@ -1,4 +1,4 @@
-===pyimc-0.3.0 20010050X===
+===pyimc-0.3.0 20100518===
 
 Bugs Fixed
 
@@ -11,7 +11,7 @@ Enhancements / Tasks
  + command 'openchat' for old functionality
  + command 'toggle' to toggle the im buddy list
 
-===pyimc-0.2.0 200100508===
+===pyimc-0.2.0 20100508===
 
 Bugs Fixed
 

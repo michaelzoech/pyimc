@@ -27,31 +27,36 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Michael Zoech or Andreas Pieber.
 '''
 
+import sys
+import dbus
+
 import modutils
+from config import Config
+from skype import SkypeWrapper
+from pidgin import PidginWrapper
+from help import usage
 
-arg_format = '[command]'
-short_description = 'print help about all or one specific command'
-long_description = '''\
-Print a list of all available commands and their short descriptions.
-If a command name is given as argument a detailed description is
-printed.
-'''
+def main():
+	config = Config()
+	bus = dbus.SessionBus()
 
-def execute(config, pidgin, skype, args):
-	if len(args) != 1 or not modutils.command_exists(args[0]):
+	pidgin = PidginWrapper(bus) if config.pidgin == 'True' else None
+	skype = SkypeWrapper(bus) if config.skype == 'True' else None
+
+	if len(sys.argv) <= 1:
 		usage()
-		return
-	cmd = args[0]
-	mod = modutils.load_command_module(cmd)
-	print 'Help for command "%s"' % cmd
-	print 'Usage: pyimc %s %s' % (cmd, mod.arg_format)
-	print mod.short_description
-	print mod.long_description
+		return -1
 
-def usage():
-	print 'USAGE: pyimc <command> [<args>]'
-	print 'Supported commands:'
-	for m in modutils.get_available_commands():
-		mod = modutils.load_command_module(m)
-		print '    %-10s %s' % (m, mod.short_description)
+	action = sys.argv[1]
+	args = sys.argv[2:]
+
+	mod = modutils.load_command_module(action)
+	if mod == None:
+		print "ERROR: Unknown command '%s'" % action
+		usage()
+		return -1
+
+	mod.execute(config, pidgin, skype, args)
+
+	return 0
 
