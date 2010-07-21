@@ -6,3 +6,8 @@
 skype = False
 pidgin = True
 menu = dmenu -b -i -xs -fn 'xft:Inconsolata:size=11' -nb #000000 -nf #9999cc -sb #000066 -sf #ffffff
+# Show online accounts before offline accounts
+prefer_online = True
+# The sort order of the protocols may be specified. Unlisted
+# protocols come at the end.
+sort_order = ['icq', 'xmpp', 'skype']
