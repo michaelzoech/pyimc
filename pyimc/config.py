@@ -42,7 +42,9 @@ class Config(object):
 			# general options
 			'skype': 'True',
 			'pidgin': 'True',
-			'menu': 'dmenu'}
+			'menu': 'dmenu',
+			'prefer_online': 'True',
+			'sort_order': "['icq', 'xmpp', 'skype']"}
 		config_file = os.path.expanduser('~/.pyimcrc')
 		if os.path.lexists(config_file):
 			try:

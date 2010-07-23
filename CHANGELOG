@@ -1,3 +1,19 @@
+===pyimc-0.4.0 20100723===
+Need another feature implemented? Send us a mail or create a new
+issue on our github site.
+
+Bugs Fixed
+
+Features
+
+Enhancements / Tasks
+ + openchat: The ordering of the protocols in the buddy menu may be
+   specified by the 'sort_order' property. See the examples on how to
+   use this. The default setting is ['icq', 'xmpp', 'skype'].
+ + openchat: New property 'prefer_online = True' to arrange currently
+   online accounts infront of offline accounts. This is the default
+   setting.
+
 ===pyimc-0.3.0 20100518===
 
 Bugs Fixed
