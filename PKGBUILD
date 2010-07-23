@@ -1,7 +1,7 @@
 # Contributor: Michael Zoech <michi.zoech+arch at gmail>
 # Contributor: Andreas Pieber <anpieber at gmail>
 pkgname=pyimc
-pkgver=0.3.0
+pkgver=0.4.0
 pkgrel=1
 pkgdesc="control Pidgin and Skype via command line"
 arch=('any')
