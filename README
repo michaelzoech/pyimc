@@ -1,5 +1,8 @@
 General introduction what the tool is all about: TBW
 
+Need support for a specific feature? Send us a mail or create a new
+issue on our github site http://github.com/crazymaik/pyimc.
+
 ===USAGE===
 
 pyimc currently supports the following commands:
@@ -18,9 +21,7 @@ menu = dmenu
 prefer_online = True
 sort_order = ['icq', 'xmpp', 'skype']
 
-For example also see the contrib folder in the downloaded distribution of pyimc
-
-TBW
+For example also see the contrib folder in the downloaded distribution of pyimc.
 
 ===BUILD===
 
