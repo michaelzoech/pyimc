@@ -44,11 +44,41 @@ def execute(config, pidgin, skype, args):
 	menu = config.menu.split()
 	p = subprocess.Popen(menu, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
+	names = {}
+
 	for proto, friends in coll.iteritems():
 		for friend in friends:
-			out = '%s on %s\n' % (friend['name'], proto.upper() if friend['on'] else proto)
-			outencoded = out.encode("ascii", "replace")
-			p.stdin.write(outencoded)
+			if friend['name'] in names:
+				name = names[friend['name']]
+			else:
+				name = {}
+			name[proto] = friend['on']
+			names[friend['name']] = name
+
+	sort_order = eval(config.sort_order)
+	prefer_online = config.prefer_online == 'True'
+
+	for name, protos in names.iteritems():
+		on = []
+		off = []
+		for pn in sort_order:
+			if pn not in protos:
+				continue
+			online = protos[pn]
+			del protos[pn]
+			if prefer_online and online:
+				on.append(pn.upper())
+			else:
+				off.append(pn.upper() if online else pn)
+		for pn,online in protos.iteritems():
+			if prefer_online and online:
+				on.append(pn.upper())
+			else:
+				off.append(pn.upper() if online else pn)
+		on.extend(off)
+		for pr in on:
+			out = '%s on %s\n' % (name,pr)
+			p.stdin.write(out.encode('ascii', 'replace'))
 
 	wanted = p.communicate()[0]
 	if wanted == "":

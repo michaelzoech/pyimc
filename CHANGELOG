@@ -1,3 +1,16 @@
+===pyimc-0.4.0 2010XXXX===
+
+Bugs Fixed
+
+Features
+
+Enhancements / Tasks
+ + The ordering of the protocols in the buddy menu may be specified by
+   the 'sort_order' property. See the examples on how to use this. The
+   default setting is ['icq', 'xmpp', 'skype'].
+ + By setting the 'prefer_online = True' property online accounts
+   will be put infront of offline accounts. This is the default setting.
+
 ===pyimc-0.3.0 20100518===
 
 Bugs Fixed
